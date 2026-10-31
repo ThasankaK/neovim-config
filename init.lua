@@ -33,3 +33,17 @@ map('n', '<C-h>', '<C-w>h', { desc = 'Focus left window' })
 map('n', '<C-j>', '<C-w>j', { desc = 'Focus window below' })
 map('n', '<C-k>', '<C-w>k', { desc = 'Focus window above' })
 map('n', '<C-l>', '<C-w>l', { desc = 'Focus right window' })
+
+-- Install the plugin manager on a new machine.
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+if not vim.uv.fs_stat(lazypath) then
+  local output = vim.fn.system({
+    'git', 'clone', '--filter=blob:none', '--branch=stable',
+    'https://github.com/folke/lazy.nvim.git', lazypath,
+  })
+  if vim.v.shell_error ~= 0 then
+    error('Could not install lazy.nvim. Check your network and restart Neovim.\n' .. output)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
+require('lazy').setup('plugins', { change_detection = { notify = false } })
